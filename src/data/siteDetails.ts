@@ -1,6 +1,6 @@
 export const siteDetails = {
-    siteName: 'Finwise',
-    siteUrl: 'https://finwise-omega.vercel.app/',
+    siteName: 'ExpenseLM',
+    siteUrl: 'https://www.expenselm.ai/',
     metadata: {
         title: 'Finwise - Next.js and Tailwind CSS Landing Page Template',
         description: 'Finwise empowers businesses with cutting-edge technology solutions to drive success and efficiency.',
