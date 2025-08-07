@@ -2,8 +2,8 @@ export const siteDetails = {
     siteName: 'ExpenseLM',
     siteUrl: 'https://www.expenselm.ai/',
     metadata: {
-        title: 'Finwise - Next.js and Tailwind CSS Landing Page Template',
-        description: 'Finwise empowers businesses with cutting-edge technology solutions to drive success and efficiency.',
+        title: 'ExpenseLM',
+        description: 'ExpenseLM help users in becoming a smarter consumer.',
     },
     language: 'en-us',
     locale: 'en-US',
