@@ -6,9 +6,11 @@ import { IPricing } from "@/types";
 interface Props {
     tier: IPricing;
     highlight?: boolean;
+    enterprise?: boolean;
+    free?: boolean;
 }
 
-const PricingColumn: React.FC<Props> = ({ tier, highlight }: Props) => {
+const PricingColumn: React.FC<Props> = ({ tier, highlight, enterprise, free }: Props) => {
     const { name, price, features } = tier;
 
     return (
@@ -21,13 +23,18 @@ const PricingColumn: React.FC<Props> = ({ tier, highlight }: Props) => {
                     </span>
                     {typeof price === 'number' && <span className="text-lg font-normal text-gray-600">/mo</span>}
                 </p>
-                <button className={clsx("w-full py-3 px-4 rounded-full transition-colors", { "bg-primary hover:bg-primary-accent": highlight, "bg-hero-background hover:bg-gray-200": !highlight })}>
-                    Get Started
-                </button>
+                {free && <button disabled={true} className={clsx("w-full py-3 px-4 rounded-full transition-colors", { "bg-primary hover:bg-primary-accent": highlight, "bg-hero-background hover:bg-gray-200": !highlight })}>
+                    Enjoy!
+                </button>}
+                {highlight && <button className={clsx("w-full py-3 px-4 rounded-full transition-colors", { "bg-primary hover:bg-primary-accent": highlight, "bg-hero-background hover:bg-gray-200": !highlight })}>
+                    <a href="https://web.expenselm.ai" target="_blank">Coming soon, stay tune!</a>
+                </button>}
+                {enterprise && <button disabled={true} className={clsx("w-full py-3 px-4 rounded-full transition-colors", { "bg-primary hover:bg-primary-accent": highlight, "bg-hero-background hover:bg-gray-200": !highlight })}>
+                    Contact Us: enquiry@expenselm.ai
+                </button>}
             </div>
             <div className="p-6 mt-1">
                 <p className="font-bold mb-0">FEATURES</p>
-                <p className="text-foreground-accent mb-5">Everything in basic, plus...</p>
                 <ul className="space-y-4 mb-8">
                     {features.map((feature, index) => (
                         <li key={index} className="flex items-center">
