@@ -44,8 +44,8 @@ const Header: React.FC = () => {
                             </li>
                         ))}
                         <li>
-                            <Link href="#cta" className="text-black bg-primary hover:bg-primary-accent px-8 py-3 rounded-full transition-colors">
-                                Download
+                            <Link href="https://web.expenselm.ai" target="_blank" className="text-black bg-primary hover:bg-primary-accent px-8 py-3 rounded-full transition-colors">
+                                Sign Up/ Login
                             </Link>
                         </li>
                     </ul>

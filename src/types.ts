@@ -6,7 +6,6 @@ export interface IMenuItem {
 export interface IBenefit {
     title: string;
     description: string;
-    imageSrc: string;
     bullets: IBenefitBullet[]
 }
 
