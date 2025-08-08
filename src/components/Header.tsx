@@ -7,6 +7,7 @@ import { Transition } from '@headlessui/react';
 import { HiOutlineXMark, HiBars3 } from 'react-icons/hi2';
 
 import Container from './Container';
+import DropdownMenu from './DropdownMenu';
 import { siteDetails } from '@/data/siteDetails';
 import { menuItems } from '@/data/menuItems';
 
@@ -38,9 +39,17 @@ const Header: React.FC = () => {
                     <ul className="hidden md:flex space-x-6">
                         {menuItems.map(item => (
                             <li key={item.text}>
-                                <Link href={item.url} className="text-foreground hover:text-foreground-accent transition-colors">
-                                    {item.text}
-                                </Link>
+                                {item.dropdown ? (
+                                    <DropdownMenu
+                                        items={item.dropdown}
+                                        label={item.text}
+                                        onItemClick={() => {}}
+                                    />
+                                ) : (
+                                    <Link href={item.url} className="text-foreground hover:text-foreground-accent transition-colors">
+                                        {item.text}
+                                    </Link>
+                                )}
                             </li>
                         ))}
                         <li>
@@ -84,9 +93,18 @@ const Header: React.FC = () => {
                     <ul className="flex flex-col space-y-4 pt-1 pb-6 px-6">
                         {menuItems.map(item => (
                             <li key={item.text}>
-                                <Link href={item.url} className="text-foreground hover:text-primary block" onClick={toggleMenu}>
-                                    {item.text}
-                                </Link>
+                                {item.dropdown ? (
+                                    <DropdownMenu
+                                        items={item.dropdown}
+                                        label={item.text}
+                                        isMobile={true}
+                                        onItemClick={toggleMenu}
+                                    />
+                                ) : (
+                                    <Link href={item.url} className="text-foreground hover:text-primary block" onClick={toggleMenu}>
+                                        {item.text}
+                                    </Link>
+                                )}
                             </li>
                         ))}
                         <li>

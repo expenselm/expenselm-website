@@ -11,7 +11,29 @@ export const menuItems: IMenuItem[] = [
     },
     {
         text: "Doc",
-        url: "#testimonials"
+        url: "#",
+        dropdown: [
+            {
+                text: "Getting Started",
+                url: "/docs/getting-started",
+                description: "Learn the basics of ExpenseLM"
+            },
+            {
+                text: "User Guide",
+                url: "/docs/user-guide",
+                description: "Complete guide to using ExpenseLM"
+            },
+            {
+                text: "API Reference",
+                url: "/docs/api-reference",
+                description: "Technical API documentation"
+            },
+            {
+                text: "Tutorials",
+                url: "/docs/tutorials",
+                description: "Step-by-step tutorials"
+            }
+        ]
     },
     {
         text: "Blog",
