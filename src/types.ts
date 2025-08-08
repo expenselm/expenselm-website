@@ -1,6 +1,13 @@
 export interface IMenuItem {
     text: string;
     url: string;
+    dropdown?: IDropdownItem[];
+}
+
+export interface IDropdownItem {
+    text: string;
+    url: string;
+    description?: string;
 }
 
 export interface IBenefit {
@@ -49,4 +56,27 @@ export interface ISocials {
     youtube?: string;
     x?: string;
     [key: string]: string | undefined;
+}
+
+export interface IDocumentationPage {
+    title: string;
+    slug: string;
+    content: string;
+    metaDescription?: string;
+    lastUpdated?: string;
+}
+
+export interface IContentfulDocumentationPage {
+    sys: {
+        id: string;
+        createdAt: string;
+        updatedAt: string;
+    };
+    fields: {
+        title: string;
+        slug: string;
+        content: string;
+        metaDescription?: string;
+    };
+    contentTypeId: 'documentationPage';
 }
