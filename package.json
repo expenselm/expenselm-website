@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^17.1.0",
+    "@contentful/rich-text-types": "^17.1.0",
     "@headlessui/react": "^2.1.8",
     "@next/third-parties": "^14.2.13",
     "@vercel/analytics": "^1.5.0",
