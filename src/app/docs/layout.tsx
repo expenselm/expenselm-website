@@ -35,9 +35,7 @@ export default function DocsLayout({
             {/* Main Content */}
             <div className="py-8">
                 <Container>
-                    <div className="max-w-4xl mx-auto">
-                        {children}
-                    </div>
+                    {children}
                 </Container>
             </div>
         </div>
