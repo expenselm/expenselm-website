@@ -51,6 +51,50 @@ interface EmbeddedAssetNode extends RichTextNode {
     };
 }
 
+// Helper function to render text with marks (bold, italic, links, etc.)
+function renderTextWithMarks(textNode: RichTextNode): string {
+    if (!textNode.value) return '';
+    
+    let text = textNode.value;
+    const marks = textNode.marks || [];
+    
+    // Apply marks in order
+    marks.forEach(mark => {
+        switch (mark) {
+            case 'bold':
+                text = `<strong>${text}</strong>`;
+                break;
+            case 'italic':
+                text = `<em>${text}</em>`;
+                break;
+            case 'underline':
+                text = `<u>${text}</u>`;
+                break;
+            case 'code':
+                text = `<code class="text-primary bg-gray-100 px-1 py-0.5 rounded">${text}</code>`;
+                break;
+        }
+    });
+    
+    return text;
+}
+
+// Helper function to render hyperlinks
+function renderHyperlink(node: RichTextNode): string {
+    const uri = (node.data as { uri: string }).uri;
+    let linkText = '';
+    
+    if (node.content) {
+        node.content.forEach((textNode: RichTextNode) => {
+            if (textNode.nodeType === 'text' && textNode.value) {
+                linkText += renderTextWithMarks(textNode);
+            }
+        });
+    }
+    
+    return `<a href="${uri}" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-dark underline">${linkText}</a>`;
+}
+
 // Custom renderer options for handling images and links
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const renderOptions: any = {
@@ -111,6 +155,12 @@ const renderOptions: any = {
         [BLOCKS.OL_LIST]: (_node: RichTextNode, children: string) => {
             return `<ol class="list-decimal list-inside mb-4 space-y-1">${children}</ol>`;
         },
+        [BLOCKS.QUOTE]: (_node: RichTextNode, children: string) => {
+            return `<blockquote class="border-l-4 border-primary bg-gray-50 pl-6 py-4 mb-4 italic text-gray-700">${children}</blockquote>`;
+        },
+        [BLOCKS.HR]: () => {
+            return `<hr class="border-gray-300 my-8" />`;
+        },
     },
 };
 
@@ -130,13 +180,19 @@ function convertRichTextToHtml(richText: unknown): string {
             const richTextObj = richText as { content: RichTextNode[] };
             if (richTextObj.content && Array.isArray(richTextObj.content)) {
                 let htmlContent = '';
+                
+                // Debug: Log all node types to understand the structure
+                console.log('Processing rich text with node types:', richTextObj.content.map(n => n.nodeType));
+                
                 richTextObj.content.forEach((node: RichTextNode) => {
                     // Handle paragraphs
                     if (node.nodeType === 'paragraph' && node.content) {
                         let paragraphText = '';
                         node.content.forEach((textNode: RichTextNode) => {
                             if (textNode.nodeType === 'text' && textNode.value) {
-                                paragraphText += textNode.value;
+                                paragraphText += renderTextWithMarks(textNode);
+                            } else if (textNode.nodeType === 'hyperlink') {
+                                paragraphText += renderHyperlink(textNode);
                             }
                         });
                         if (paragraphText.trim()) {
@@ -148,7 +204,9 @@ function convertRichTextToHtml(richText: unknown): string {
                         let headingText = '';
                         node.content.forEach((textNode: RichTextNode) => {
                             if (textNode.nodeType === 'text' && textNode.value) {
-                                headingText += textNode.value;
+                                headingText += renderTextWithMarks(textNode);
+                            } else if (textNode.nodeType === 'hyperlink') {
+                                headingText += renderHyperlink(textNode);
                             }
                         });
                         if (headingText.trim()) {
@@ -159,7 +217,9 @@ function convertRichTextToHtml(richText: unknown): string {
                         let headingText = '';
                         node.content.forEach((textNode: RichTextNode) => {
                             if (textNode.nodeType === 'text' && textNode.value) {
-                                headingText += textNode.value;
+                                headingText += renderTextWithMarks(textNode);
+                            } else if (textNode.nodeType === 'hyperlink') {
+                                headingText += renderHyperlink(textNode);
                             }
                         });
                         if (headingText.trim()) {
@@ -170,7 +230,9 @@ function convertRichTextToHtml(richText: unknown): string {
                         let headingText = '';
                         node.content.forEach((textNode: RichTextNode) => {
                             if (textNode.nodeType === 'text' && textNode.value) {
-                                headingText += textNode.value;
+                                headingText += renderTextWithMarks(textNode);
+                            } else if (textNode.nodeType === 'hyperlink') {
+                                headingText += renderHyperlink(textNode);
                             }
                         });
                         if (headingText.trim()) {
@@ -178,14 +240,25 @@ function convertRichTextToHtml(richText: unknown): string {
                         }
                     }
                     // Handle unordered lists
-                    else if (node.nodeType === 'unordered-list' && node.content) {
+                    else if ((node.nodeType === 'unordered-list' || node.nodeType === 'ul' || node.nodeType === BLOCKS.UL_LIST || node.nodeType === 'list') && node.content) {
                         let listItems = '';
                         node.content.forEach((listItem: RichTextNode) => {
-                            if (listItem.nodeType === 'list-item' && listItem.content) {
+                            if ((listItem.nodeType === 'list-item' || listItem.nodeType === 'li' || listItem.nodeType === BLOCKS.LIST_ITEM || listItem.nodeType === 'item') && listItem.content) {
                                 let itemText = '';
                                 listItem.content.forEach((textNode: RichTextNode) => {
-                                    if (textNode.nodeType === 'text' && textNode.value) {
-                                        itemText += textNode.value;
+                                    // Handle nested paragraphs in list items
+                                    if (textNode.nodeType === 'paragraph' && textNode.content) {
+                                        textNode.content.forEach((paragraphTextNode: RichTextNode) => {
+                                            if (paragraphTextNode.nodeType === 'text' && paragraphTextNode.value) {
+                                                itemText += renderTextWithMarks(paragraphTextNode);
+                                            } else if (paragraphTextNode.nodeType === 'hyperlink') {
+                                                itemText += renderHyperlink(paragraphTextNode);
+                                            }
+                                        });
+                                    } else if (textNode.nodeType === 'text' && textNode.value) {
+                                        itemText += renderTextWithMarks(textNode);
+                                    } else if (textNode.nodeType === 'hyperlink') {
+                                        itemText += renderHyperlink(textNode);
                                     }
                                 });
                                 if (itemText.trim()) {
@@ -198,14 +271,25 @@ function convertRichTextToHtml(richText: unknown): string {
                         }
                     }
                     // Handle ordered lists
-                    else if (node.nodeType === 'ordered-list' && node.content) {
+                    else if ((node.nodeType === 'ordered-list' || node.nodeType === 'ol' || node.nodeType === BLOCKS.OL_LIST || node.nodeType === 'numbered-list') && node.content) {
                         let listItems = '';
                         node.content.forEach((listItem: RichTextNode) => {
-                            if (listItem.nodeType === 'list-item' && listItem.content) {
+                            if ((listItem.nodeType === 'list-item' || listItem.nodeType === 'li' || listItem.nodeType === BLOCKS.LIST_ITEM || listItem.nodeType === 'item') && listItem.content) {
                                 let itemText = '';
                                 listItem.content.forEach((textNode: RichTextNode) => {
-                                    if (textNode.nodeType === 'text' && textNode.value) {
-                                        itemText += textNode.value;
+                                    // Handle nested paragraphs in list items
+                                    if (textNode.nodeType === 'paragraph' && textNode.content) {
+                                        textNode.content.forEach((paragraphTextNode: RichTextNode) => {
+                                            if (paragraphTextNode.nodeType === 'text' && paragraphTextNode.value) {
+                                                itemText += renderTextWithMarks(paragraphTextNode);
+                                            } else if (paragraphTextNode.nodeType === 'hyperlink') {
+                                                itemText += renderHyperlink(paragraphTextNode);
+                                            }
+                                        });
+                                    } else if (textNode.nodeType === 'text' && textNode.value) {
+                                        itemText += renderTextWithMarks(textNode);
+                                    } else if (textNode.nodeType === 'hyperlink') {
+                                        itemText += renderHyperlink(textNode);
                                     }
                                 });
                                 if (itemText.trim()) {
@@ -216,6 +300,65 @@ function convertRichTextToHtml(richText: unknown): string {
                         if (listItems) {
                             htmlContent += `<ol class="list-decimal list-inside mb-4 space-y-1">${listItems}</ol>`;
                         }
+                    }
+                    // Generic list detection - check if content looks like a list
+                    else if (node.content && Array.isArray(node.content) && node.content.length > 0 && 
+                             node.content.every(item => item.nodeType === 'list-item' || item.nodeType === 'li' || item.nodeType === 'item' || 
+                                                   (item.content && Array.isArray(item.content) && item.content.some(c => c.nodeType === 'paragraph')))) {
+                        // This looks like a list structure
+                        let listItems = '';
+                        node.content.forEach((listItem: RichTextNode) => {
+                            if (listItem.content) {
+                                let itemText = '';
+                                listItem.content.forEach((textNode: RichTextNode) => {
+                                    if (textNode.nodeType === 'paragraph' && textNode.content) {
+                                        textNode.content.forEach((paragraphTextNode: RichTextNode) => {
+                                            if (paragraphTextNode.nodeType === 'text' && paragraphTextNode.value) {
+                                                itemText += renderTextWithMarks(paragraphTextNode);
+                                            } else if (paragraphTextNode.nodeType === 'hyperlink') {
+                                                itemText += renderHyperlink(paragraphTextNode);
+                                            }
+                                        });
+                                    } else if (textNode.nodeType === 'text' && textNode.value) {
+                                        itemText += renderTextWithMarks(textNode);
+                                    } else if (textNode.nodeType === 'hyperlink') {
+                                        itemText += renderHyperlink(textNode);
+                                    }
+                                });
+                                if (itemText.trim()) {
+                                    listItems += `<li class="mb-1">${itemText.trim()}</li>`;
+                                }
+                            }
+                        });
+                        if (listItems) {
+                            htmlContent += `<ul class="list-disc list-inside mb-4 space-y-1">${listItems}</ul>`;
+                        }
+                    }
+                    // Handle quotes
+                    else if ((node.nodeType === 'quote' || node.nodeType === 'blockquote' || node.nodeType === BLOCKS.QUOTE) && node.content) {
+                        let quoteText = '';
+                        node.content.forEach((textNode: RichTextNode) => {
+                            if (textNode.nodeType === 'paragraph' && textNode.content) {
+                                textNode.content.forEach((paragraphTextNode: RichTextNode) => {
+                                    if (paragraphTextNode.nodeType === 'text' && paragraphTextNode.value) {
+                                        quoteText += renderTextWithMarks(paragraphTextNode);
+                                    } else if (paragraphTextNode.nodeType === 'hyperlink') {
+                                        quoteText += renderHyperlink(paragraphTextNode);
+                                    }
+                                });
+                            } else if (textNode.nodeType === 'text' && textNode.value) {
+                                quoteText += renderTextWithMarks(textNode);
+                            } else if (textNode.nodeType === 'hyperlink') {
+                                quoteText += renderHyperlink(textNode);
+                            }
+                        });
+                        if (quoteText.trim()) {
+                            htmlContent += `<blockquote class="border-l-4 border-primary bg-gray-50 pl-6 py-4 mb-4 italic text-gray-700">${quoteText.trim()}</blockquote>`;
+                        }
+                    }
+                    // Handle horizontal rules
+                    else if (node.nodeType === 'hr' || node.nodeType === BLOCKS.HR) {
+                        htmlContent += `<hr class="border-gray-300 my-8" />`;
                     }
                     // Handle images
                     else if (node.nodeType === 'embedded-asset-block') {
@@ -250,11 +393,21 @@ function convertRichTextToHtml(richText: unknown): string {
                 if (htmlContent.trim()) {
                     return htmlContent.trim();
                 }
+                
+                // Debug: Log the structure if no content was processed
+                console.log('No content processed, raw rich text structure:', JSON.stringify(richText, null, 2));
             }
             
-            // Fallback to Rich Text renderer
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            return documentToHtmlString(richText as any, renderOptions);
+            // Fallback to Rich Text renderer with our custom options
+            try {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const renderedHtml = documentToHtmlString(richText as any, renderOptions);
+                console.log('Rich Text renderer output:', renderedHtml);
+                return renderedHtml;
+            } catch (renderError) {
+                console.error('Rich Text renderer failed:', renderError);
+                return String(richText || '');
+            }
         }
         
         // If it's not a recognized format, return as string
