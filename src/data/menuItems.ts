@@ -16,22 +16,12 @@ export const menuItems: IMenuItem[] = [
             {
                 text: "Getting Started",
                 url: "/docs/getting-started",
-                description: "Learn the basics of ExpenseLM"
+                description: "Getting Started with ExpenseLM"
             },
             {
-                text: "User Guide",
-                url: "/docs/user-guide",
-                description: "Complete guide to using ExpenseLM"
-            },
-            {
-                text: "API Reference",
-                url: "/docs/api-reference",
-                description: "Technical API documentation"
-            },
-            {
-                text: "Tutorials",
-                url: "/docs/tutorials",
-                description: "Step-by-step tutorials"
+                text: "MCP Server Guide",
+                url: "/docs/mcp-server-guide",
+                description: "ExpenseLM MCP Server Guide"
             }
         ]
     },
