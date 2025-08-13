@@ -52,3 +52,120 @@ h1, h2, h3, h4, h5, h6 {
 .benefit-section:last-of-type > div {
   @apply mb-10;
 }
+
+/* Ensure documentation page links are blue */
+.documentation-content a {
+  color: #2563eb !important;
+  text-decoration: underline !important;
+}
+
+.documentation-content a:hover {
+  color: #1d4ed8 !important;
+}
+
+/* Ensure formatting works correctly */
+.documentation-content strong,
+.documentation-content b {
+  font-weight: bold !important;
+  color: #111827 !important;
+}
+
+.documentation-content em,
+.documentation-content i {
+  font-style: italic !important;
+}
+
+.documentation-content u {
+  text-decoration: underline !important;
+}
+
+.documentation-content code {
+  color: #1f2937 !important;
+  background-color: #f3f4f6 !important;
+  padding: 0.125rem 0.25rem !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.875rem !important;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace !important;
+}
+
+/* Additional specificity for nested elements */
+.documentation-content p strong,
+.documentation-content p b {
+  font-weight: bold !important;
+  color: #111827 !important;
+}
+
+.documentation-content p em,
+.documentation-content p i {
+  font-style: italic !important;
+}
+
+.documentation-content p u {
+  text-decoration: underline !important;
+}
+
+.documentation-content li strong,
+.documentation-content li b {
+  font-weight: bold !important;
+  color: #111827 !important;
+}
+
+.documentation-content li em,
+.documentation-content li i {
+  font-style: italic !important;
+}
+
+.documentation-content li u {
+  text-decoration: underline !important;
+}
+
+/* Table styles */
+.documentation-content table {
+  min-width: 100% !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 0.5rem !important;
+  overflow: hidden !important;
+  margin: 1.5rem 0 !important;
+  border-collapse: collapse !important;
+}
+
+.documentation-content table thead {
+  background-color: #f9fafb !important;
+}
+
+.documentation-content table tbody tr {
+  border-bottom: 1px solid #d1d5db !important;
+}
+
+.documentation-content table tbody tr:last-child {
+  border-bottom: none !important;
+}
+
+.documentation-content table th {
+  padding: 0.75rem 1rem !important;
+  text-align: left !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: #111827 !important;
+  border-right: 1px solid #d1d5db !important;
+  background-color: #f9fafb !important;
+}
+
+.documentation-content table th:last-child {
+  border-right: none !important;
+}
+
+.documentation-content table td {
+  padding: 0.75rem 1rem !important;
+  font-size: 0.875rem !important;
+  color: #374151 !important;
+  border-right: 1px solid #d1d5db !important;
+}
+
+.documentation-content table td:last-child {
+  border-right: none !important;
+}
+
+.documentation-content table tr:hover {
+  background-color: #f9fafb !important;
+}

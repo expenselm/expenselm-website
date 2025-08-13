@@ -20,12 +20,16 @@ const client = createClient({
 });
 
 // Type definitions for Contentful Rich Text nodes
+interface RichTextMark {
+    type: string;
+}
+
 interface RichTextNode {
     nodeType: string;
     data: Record<string, unknown>;
     content?: RichTextNode[];
     value?: string;
-    marks?: string[];
+    marks?: RichTextMark[];
 }
 
 interface EmbeddedAssetNode extends RichTextNode {
@@ -51,6 +55,8 @@ interface EmbeddedAssetNode extends RichTextNode {
     };
 }
 
+
+
 // Helper function to render text with marks (bold, italic, links, etc.)
 function renderTextWithMarks(textNode: RichTextNode): string {
     if (!textNode.value) return '';
@@ -58,9 +64,18 @@ function renderTextWithMarks(textNode: RichTextNode): string {
     let text = textNode.value;
     const marks = textNode.marks || [];
     
-    // Apply marks in order
-    marks.forEach(mark => {
-        switch (mark) {
+    // Debug: Log marks for this text node
+    // if (marks.length > 0) {
+    //     console.log('Text node marks:', marks, 'for text:', text);
+    // }
+    
+    // Apply marks in order - we need to apply them from innermost to outermost
+    // So we reverse the order to apply them correctly
+    const reversedMarks = [...marks].reverse();
+    
+    reversedMarks.forEach(mark => {
+        const markType = typeof mark === 'string' ? mark : mark.type;
+        switch (markType) {
             case 'bold':
                 text = `<strong>${text}</strong>`;
                 break;
@@ -71,7 +86,10 @@ function renderTextWithMarks(textNode: RichTextNode): string {
                 text = `<u>${text}</u>`;
                 break;
             case 'code':
-                text = `<code class="text-primary bg-gray-100 px-1 py-0.5 rounded">${text}</code>`;
+                text = `<code class="text-gray-800 bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">${text}</code>`;
+                break;
+            default:
+                // Handle any other marks that might exist
                 break;
         }
     });
@@ -92,7 +110,90 @@ function renderHyperlink(node: RichTextNode): string {
         });
     }
     
-    return `<a href="${uri}" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-dark underline">${linkText}</a>`;
+    return `<a href="${uri}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline">${linkText}</a>`;
+}
+
+// Helper function to process list item content recursively
+function processListItemContent(listItem: RichTextNode): string {
+    let itemContent = '';
+    
+    if (listItem.content) {
+        listItem.content.forEach((textNode: RichTextNode) => {
+            // Handle nested paragraphs in list items
+            if (textNode.nodeType === 'paragraph' && textNode.content) {
+                let paragraphText = '';
+                textNode.content.forEach((paragraphTextNode: RichTextNode) => {
+                    if (paragraphTextNode.nodeType === 'text' && paragraphTextNode.value) {
+                        paragraphText += renderTextWithMarks(paragraphTextNode);
+                    } else if (paragraphTextNode.nodeType === 'hyperlink') {
+                        paragraphText += renderHyperlink(paragraphTextNode);
+                    }
+                });
+                if (paragraphText.trim()) {
+                    itemContent += paragraphText.trim();
+                }
+            } 
+            // Handle nested lists
+            else if (textNode.nodeType === 'unordered-list' || textNode.nodeType === 'ul' || textNode.nodeType === BLOCKS.UL_LIST) {
+                itemContent += processUnorderedList(textNode);
+            }
+            else if (textNode.nodeType === 'ordered-list' || textNode.nodeType === 'ol' || textNode.nodeType === BLOCKS.OL_LIST) {
+                itemContent += processOrderedList(textNode);
+            }
+            // Handle other content
+            else if (textNode.nodeType === 'text' && textNode.value) {
+                itemContent += renderTextWithMarks(textNode);
+            } else if (textNode.nodeType === 'hyperlink') {
+                itemContent += renderHyperlink(textNode);
+            }
+        });
+    }
+    
+    return itemContent;
+}
+
+// Helper function to process unordered lists recursively
+function processUnorderedList(listNode: RichTextNode): string {
+    let listItems = '';
+    
+    if (listNode.content) {
+        listNode.content.forEach((listItem: RichTextNode) => {
+            if ((listItem.nodeType === 'list-item' || listItem.nodeType === 'li' || listItem.nodeType === BLOCKS.LIST_ITEM || listItem.nodeType === 'item') && listItem.content) {
+                const itemContent = processListItemContent(listItem);
+                if (itemContent.trim()) {
+                    listItems += `<li class="mb-1">${itemContent.trim()}</li>`;
+                }
+            }
+        });
+    }
+    
+    if (listItems) {
+        return `<ul class="list-disc list-inside mb-4 space-y-1 ml-4">${listItems}</ul>`;
+    }
+    
+    return '';
+}
+
+// Helper function to process ordered lists recursively
+function processOrderedList(listNode: RichTextNode): string {
+    let listItems = '';
+    
+    if (listNode.content) {
+        listNode.content.forEach((listItem: RichTextNode) => {
+            if ((listItem.nodeType === 'list-item' || listItem.nodeType === 'li' || listItem.nodeType === BLOCKS.LIST_ITEM || listItem.nodeType === 'item') && listItem.content) {
+                const itemContent = processListItemContent(listItem);
+                if (itemContent.trim()) {
+                    listItems += `<li class="mb-1">${itemContent.trim()}</li>`;
+                }
+            }
+        });
+    }
+    
+    if (listItems) {
+        return `<ol class="list-decimal list-inside mb-4 space-y-1 ml-4">${listItems}</ol>`;
+    }
+    
+    return '';
 }
 
 // Custom renderer options for handling images and links
@@ -138,7 +239,7 @@ const renderOptions: any = {
         },
         [INLINES.HYPERLINK]: (node: RichTextNode, children: string) => {
             const uri = (node.data as { uri: string }).uri;
-            return `<a href="${uri}" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-dark underline">${children}</a>`;
+            return `<a href="${uri}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 underline">${children}</a>`;
         },
         [BLOCKS.PARAGRAPH]: (_node: RichTextNode, children: string) => {
             return `<p class="mb-4 leading-relaxed">${children}</p>`;
@@ -161,6 +262,7 @@ const renderOptions: any = {
         [BLOCKS.HR]: () => {
             return `<hr class="border-gray-300 my-8" />`;
         },
+
     },
 };
 
@@ -182,21 +284,63 @@ function convertRichTextToHtml(richText: unknown): string {
                 let htmlContent = '';
                 
                 // Debug: Log all node types to understand the structure
-                console.log('Processing rich text with node types:', richTextObj.content.map(n => n.nodeType));
+                // console.log('Processing rich text with node types:', richTextObj.content.map(n => n.nodeType));
+                // console.log('Processing rich text content:', JSON.stringify(richTextObj.content, null, 2));
                 
                 richTextObj.content.forEach((node: RichTextNode) => {
+                    // Debug: Log all node types to understand the structure
+                    console.log('Processing node type:', node.nodeType, node);
+                    
                     // Handle paragraphs
                     if (node.nodeType === 'paragraph' && node.content) {
-                        let paragraphText = '';
-                        node.content.forEach((textNode: RichTextNode) => {
-                            if (textNode.nodeType === 'text' && textNode.value) {
-                                paragraphText += renderTextWithMarks(textNode);
-                            } else if (textNode.nodeType === 'hyperlink') {
-                                paragraphText += renderHyperlink(textNode);
+                        // Check if this paragraph contains only code content
+                        const hasOnlyCodeContent = node.content.every((textNode: RichTextNode) => 
+                            textNode.nodeType === 'text' && 
+                            textNode.marks && 
+                            textNode.marks.some((mark: RichTextMark) => mark.type === 'code')
+                        );
+                        
+                        // Check if the content contains newlines (indicating a code block)
+                        const hasNewlines = node.content.some((textNode: RichTextNode) => 
+                            textNode.nodeType === 'text' && 
+                            textNode.value && 
+                            textNode.value.includes('\n')
+                        );
+                        
+                        if (hasOnlyCodeContent && hasNewlines) {
+                            // This is a code block - render it as such
+                            console.log('Found code block in paragraph:', node);
+                            let codeText = '';
+                            node.content.forEach((textNode: RichTextNode) => {
+                                if (textNode.nodeType === 'text' && textNode.value) {
+                                    codeText += textNode.value;
+                                }
+                            });
+                            console.log('Code block content:', codeText);
+                            if (codeText.trim()) {
+                                // Preserve newlines and formatting in code blocks
+                                // Escape HTML entities to prevent XSS and preserve formatting
+                                const escapedCode = codeText
+                                    .replace(/&/g, '&amp;')
+                                    .replace(/</g, '&lt;')
+                                    .replace(/>/g, '&gt;')
+                                    .replace(/"/g, '&quot;')
+                                    .replace(/'/g, '&#39;');
+                                htmlContent += `<pre class="bg-gray-100 border border-gray-200 rounded-lg p-4 mb-4 overflow-x-auto"><code class="text-sm font-mono text-gray-800 whitespace-pre">${escapedCode}</code></pre>`;
                             }
-                        });
-                        if (paragraphText.trim()) {
-                            htmlContent += `<p class="mb-4 leading-relaxed">${paragraphText.trim()}</p>`;
+                        } else {
+                            // Regular paragraph
+                            let paragraphText = '';
+                            node.content.forEach((textNode: RichTextNode) => {
+                                if (textNode.nodeType === 'text' && textNode.value) {
+                                    paragraphText += renderTextWithMarks(textNode);
+                                } else if (textNode.nodeType === 'hyperlink') {
+                                    paragraphText += renderHyperlink(textNode);
+                                }
+                            });
+                            if (paragraphText.trim()) {
+                                htmlContent += `<p class="mb-4 leading-relaxed">${paragraphText.trim()}</p>`;
+                            }
                         }
                     }
                     // Handle headings
@@ -241,97 +385,29 @@ function convertRichTextToHtml(richText: unknown): string {
                     }
                     // Handle unordered lists
                     else if ((node.nodeType === 'unordered-list' || node.nodeType === 'ul' || node.nodeType === BLOCKS.UL_LIST || node.nodeType === 'list') && node.content) {
-                        let listItems = '';
-                        node.content.forEach((listItem: RichTextNode) => {
-                            if ((listItem.nodeType === 'list-item' || listItem.nodeType === 'li' || listItem.nodeType === BLOCKS.LIST_ITEM || listItem.nodeType === 'item') && listItem.content) {
-                                let itemText = '';
-                                listItem.content.forEach((textNode: RichTextNode) => {
-                                    // Handle nested paragraphs in list items
-                                    if (textNode.nodeType === 'paragraph' && textNode.content) {
-                                        textNode.content.forEach((paragraphTextNode: RichTextNode) => {
-                                            if (paragraphTextNode.nodeType === 'text' && paragraphTextNode.value) {
-                                                itemText += renderTextWithMarks(paragraphTextNode);
-                                            } else if (paragraphTextNode.nodeType === 'hyperlink') {
-                                                itemText += renderHyperlink(paragraphTextNode);
-                                            }
-                                        });
-                                    } else if (textNode.nodeType === 'text' && textNode.value) {
-                                        itemText += renderTextWithMarks(textNode);
-                                    } else if (textNode.nodeType === 'hyperlink') {
-                                        itemText += renderHyperlink(textNode);
-                                    }
-                                });
-                                if (itemText.trim()) {
-                                    listItems += `<li class="mb-1">${itemText.trim()}</li>`;
-                                }
-                            }
-                        });
-                        if (listItems) {
-                            htmlContent += `<ul class="list-disc list-inside mb-4 space-y-1">${listItems}</ul>`;
+                        const listHtml = processUnorderedList(node);
+                        if (listHtml) {
+                            // Remove the ml-4 class from the top-level list
+                            htmlContent += listHtml.replace('ml-4', '');
                         }
                     }
                     // Handle ordered lists
                     else if ((node.nodeType === 'ordered-list' || node.nodeType === 'ol' || node.nodeType === BLOCKS.OL_LIST || node.nodeType === 'numbered-list') && node.content) {
-                        let listItems = '';
-                        node.content.forEach((listItem: RichTextNode) => {
-                            if ((listItem.nodeType === 'list-item' || listItem.nodeType === 'li' || listItem.nodeType === BLOCKS.LIST_ITEM || listItem.nodeType === 'item') && listItem.content) {
-                                let itemText = '';
-                                listItem.content.forEach((textNode: RichTextNode) => {
-                                    // Handle nested paragraphs in list items
-                                    if (textNode.nodeType === 'paragraph' && textNode.content) {
-                                        textNode.content.forEach((paragraphTextNode: RichTextNode) => {
-                                            if (paragraphTextNode.nodeType === 'text' && paragraphTextNode.value) {
-                                                itemText += renderTextWithMarks(paragraphTextNode);
-                                            } else if (paragraphTextNode.nodeType === 'hyperlink') {
-                                                itemText += renderHyperlink(paragraphTextNode);
-                                            }
-                                        });
-                                    } else if (textNode.nodeType === 'text' && textNode.value) {
-                                        itemText += renderTextWithMarks(textNode);
-                                    } else if (textNode.nodeType === 'hyperlink') {
-                                        itemText += renderHyperlink(textNode);
-                                    }
-                                });
-                                if (itemText.trim()) {
-                                    listItems += `<li class="mb-1">${itemText.trim()}</li>`;
-                                }
-                            }
-                        });
-                        if (listItems) {
-                            htmlContent += `<ol class="list-decimal list-inside mb-4 space-y-1">${listItems}</ol>`;
+                        const listHtml = processOrderedList(node);
+                        if (listHtml) {
+                            // Remove the ml-4 class from the top-level list
+                            htmlContent += listHtml.replace('ml-4', '');
                         }
                     }
                     // Generic list detection - check if content looks like a list
                     else if (node.content && Array.isArray(node.content) && node.content.length > 0 && 
                              node.content.every(item => item.nodeType === 'list-item' || item.nodeType === 'li' || item.nodeType === 'item' || 
                                                    (item.content && Array.isArray(item.content) && item.content.some(c => c.nodeType === 'paragraph')))) {
-                        // This looks like a list structure
-                        let listItems = '';
-                        node.content.forEach((listItem: RichTextNode) => {
-                            if (listItem.content) {
-                                let itemText = '';
-                                listItem.content.forEach((textNode: RichTextNode) => {
-                                    if (textNode.nodeType === 'paragraph' && textNode.content) {
-                                        textNode.content.forEach((paragraphTextNode: RichTextNode) => {
-                                            if (paragraphTextNode.nodeType === 'text' && paragraphTextNode.value) {
-                                                itemText += renderTextWithMarks(paragraphTextNode);
-                                            } else if (paragraphTextNode.nodeType === 'hyperlink') {
-                                                itemText += renderHyperlink(paragraphTextNode);
-                                            }
-                                        });
-                                    } else if (textNode.nodeType === 'text' && textNode.value) {
-                                        itemText += renderTextWithMarks(textNode);
-                                    } else if (textNode.nodeType === 'hyperlink') {
-                                        itemText += renderHyperlink(textNode);
-                                    }
-                                });
-                                if (itemText.trim()) {
-                                    listItems += `<li class="mb-1">${itemText.trim()}</li>`;
-                                }
-                            }
-                        });
-                        if (listItems) {
-                            htmlContent += `<ul class="list-disc list-inside mb-4 space-y-1">${listItems}</ul>`;
+                        // This looks like a list structure - treat as unordered list
+                        const listHtml = processUnorderedList(node);
+                        if (listHtml) {
+                            // Remove the ml-4 class from the top-level list
+                            htmlContent += listHtml.replace('ml-4', '');
                         }
                     }
                     // Handle quotes
@@ -359,6 +435,74 @@ function convertRichTextToHtml(richText: unknown): string {
                     // Handle horizontal rules
                     else if (node.nodeType === 'hr' || node.nodeType === BLOCKS.HR) {
                         htmlContent += `<hr class="border-gray-300 my-8" />`;
+                    }
+                    // Handle tables
+                    else if (node.nodeType === 'table' || node.nodeType === BLOCKS.TABLE) {
+                        let tableContent = '';
+                        if (node.content) {
+                            tableContent += '<div class="overflow-x-auto my-6"><table class="min-w-full border border-gray-300 rounded-lg">';
+                            node.content.forEach((tableRow: RichTextNode) => {
+                                if (tableRow.nodeType === 'table-row' || tableRow.nodeType === BLOCKS.TABLE_ROW) {
+                                    tableContent += '<tr class="border-b border-gray-300">';
+                                    if (tableRow.content) {
+                                        tableRow.content.forEach((cell: RichTextNode) => {
+                                            if (cell.nodeType === 'table-header-cell' || cell.nodeType === BLOCKS.TABLE_HEADER_CELL) {
+                                                let cellContent = '';
+                                                if (cell.content) {
+                                                    cell.content.forEach((textNode: RichTextNode) => {
+                                                        if (textNode.nodeType === 'text' && textNode.value) {
+                                                            cellContent += renderTextWithMarks(textNode);
+                                                        } else if (textNode.nodeType === 'hyperlink') {
+                                                            cellContent += renderHyperlink(textNode);
+                                                        }
+                                                    });
+                                                }
+                                                tableContent += `<th class="px-4 py-3 bg-gray-50 text-left text-sm font-semibold text-gray-900 border-r border-gray-300">${cellContent}</th>`;
+                                            } else if (cell.nodeType === 'table-cell' || cell.nodeType === BLOCKS.TABLE_CELL) {
+                                                let cellContent = '';
+                                                if (cell.content) {
+                                                    cell.content.forEach((textNode: RichTextNode) => {
+                                                        if (textNode.nodeType === 'text' && textNode.value) {
+                                                            cellContent += renderTextWithMarks(textNode);
+                                                        } else if (textNode.nodeType === 'hyperlink') {
+                                                            cellContent += renderHyperlink(textNode);
+                                                        }
+                                                    });
+                                                }
+                                                tableContent += `<td class="px-4 py-3 text-sm text-gray-700 border-r border-gray-300">${cellContent}</td>`;
+                                            }
+                                        });
+                                    }
+                                    tableContent += '</tr>';
+                                }
+                            });
+                            tableContent += '</table></div>';
+                        }
+                        htmlContent += tableContent;
+                    }
+                    // Handle code blocks
+                    else if (node.nodeType === 'code' || node.nodeType === 'code-block') {
+                        console.log('Found code block node:', node.nodeType, node);
+                        let codeText = '';
+                        if (node.content) {
+                            node.content.forEach((textNode: RichTextNode) => {
+                                if (textNode.nodeType === 'text' && textNode.value) {
+                                    codeText += textNode.value;
+                                }
+                            });
+                        }
+                        console.log('Code block content:', codeText);
+                        if (codeText.trim()) {
+                            // Preserve newlines and formatting in code blocks
+                            // Escape HTML entities to prevent XSS and preserve formatting
+                            const escapedCode = codeText
+                                .replace(/&/g, '&amp;')
+                                .replace(/</g, '&lt;')
+                                .replace(/>/g, '&gt;')
+                                .replace(/"/g, '&quot;')
+                                .replace(/'/g, '&#39;');
+                            htmlContent += `<pre class="bg-gray-100 border border-gray-200 rounded-lg p-4 mb-4 overflow-x-auto"><code class="text-sm font-mono text-gray-800 whitespace-pre">${escapedCode}</code></pre>`;
+                        }
                     }
                     // Handle images
                     else if (node.nodeType === 'embedded-asset-block') {
@@ -395,17 +539,32 @@ function convertRichTextToHtml(richText: unknown): string {
                 }
                 
                 // Debug: Log the structure if no content was processed
-                console.log('No content processed, raw rich text structure:', JSON.stringify(richText, null, 2));
+                // console.log('No content processed, raw rich text structure:', JSON.stringify(richText, null, 2));
             }
             
             // Fallback to Rich Text renderer with our custom options
             try {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const renderedHtml = documentToHtmlString(richText as any, renderOptions);
-                console.log('Rich Text renderer output:', renderedHtml);
+                // console.log('Rich Text renderer output:', renderedHtml.substring(0, 200));
                 return renderedHtml;
             } catch (renderError) {
                 console.error('Rich Text renderer failed:', renderError);
+                // Try to extract plain text as fallback
+                if (richText && typeof richText === 'object' && 'content' in richText) {
+                    const richTextObj = richText as { content: RichTextNode[] };
+                    let plainText = '';
+                    richTextObj.content.forEach((node: RichTextNode) => {
+                        if (node.content) {
+                            node.content.forEach((textNode: RichTextNode) => {
+                                if (textNode.nodeType === 'text' && textNode.value) {
+                                    plainText += textNode.value;
+                                }
+                            });
+                        }
+                    });
+                    return plainText || String(richText || '');
+                }
                 return String(richText || '');
             }
         }
@@ -416,6 +575,33 @@ function convertRichTextToHtml(richText: unknown): string {
         console.error('Error converting Rich Text to HTML:', error);
         return String(richText || '');
     }
+}
+
+// Helper function to process HTML content and ensure code blocks preserve newlines
+function processHtmlContent(htmlContent: string): string {
+    // If the content is already HTML, we need to ensure code blocks preserve newlines
+    return htmlContent.replace(
+        /<pre[^>]*><code[^>]*>([\s\S]*?)<\/code><\/pre>/g,
+        (match, codeContent) => {
+            // Decode HTML entities and preserve newlines
+            const decodedContent = codeContent
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'");
+            
+            // Re-encode for safety and add whitespace-pre class
+            const escapedCode = decodedContent
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+            
+            return `<pre class="bg-gray-100 border border-gray-200 rounded-lg p-4 mb-4 overflow-x-auto"><code class="text-sm font-mono text-gray-800 whitespace-pre">${escapedCode}</code></pre>`;
+        }
+    );
 }
 
 // Type for Contentful fields
@@ -466,10 +652,31 @@ export async function getDocumentationPage(slug: string): Promise<IDocumentation
         const item = response.items[0];
         const fields = item.fields as ContentfulFields;
         
+        // Debug: Log the raw content to see what we're getting
+        console.log('Raw content from Contentful:', typeof fields.content);
+        if (typeof fields.content === 'object' && fields.content) {
+            console.log('Content structure:', JSON.stringify(fields.content, null, 2));
+        }
+        
+        // If the content is already HTML (string), we need to check if it contains the formatting
+        // If it's Rich Text object, we can process it
+        console.log('Content type:', typeof fields.content);
+        console.log('Content length:', fields.content ? (fields.content as string).length : 'null/undefined');
+        
+        // For now, always process as Rich Text object to test
+        console.log('Processing as Rich Text object...');
+        let processedContent = convertRichTextToHtml(fields.content);
+        console.log('After Rich Text conversion, length:', processedContent.length);
+        
+        // If the content is a string (HTML), process it to ensure code blocks preserve newlines
+        if (typeof processedContent === 'string') {
+            processedContent = processHtmlContent(processedContent);
+        }
+        
         return {
             title: fields.title || '',
             slug: fields.slug || '',
-            content: convertRichTextToHtml(fields.content),
+            content: processedContent,
             metaDescription: fields.metaDescription,
             lastUpdated: item.sys.updatedAt,
         };
