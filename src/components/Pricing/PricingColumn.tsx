@@ -27,7 +27,7 @@ const PricingColumn: React.FC<Props> = ({ tier, highlight, enterprise, free }: P
                     Enjoy!
                 </button>}
                 {highlight && <button className={clsx("w-full py-3 px-4 rounded-full transition-colors", { "bg-primary hover:bg-primary-accent": highlight, "bg-hero-background hover:bg-gray-200": !highlight })}>
-                    <a href="https://web.expenselm.ai" target="_blank">Coming soon, stay tune!</a>
+                    <a href="https://web.expenselm.ai" target="_blank">Subscribe at Web Portal</a>
                 </button>}
                 {enterprise && <button disabled={true} className={clsx("w-full py-3 px-4 rounded-full transition-colors", { "bg-primary hover:bg-primary-accent": highlight, "bg-hero-background hover:bg-gray-200": !highlight })}>
                     Contact Us: enquiry@expenselm.ai
