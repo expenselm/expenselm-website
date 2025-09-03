@@ -685,3 +685,77 @@ export async function getDocumentationPage(slug: string): Promise<IDocumentation
         return null;
     }
 }
+
+// Fetch all help pages
+export async function getHelpPages(): Promise<IDocumentationPage[]> {
+    try {
+        const response = await client.getEntries({
+            content_type: 'helpPage',
+            include: 10, // Include up to 10 levels of linked entries and assets
+        });
+
+        return response.items.map((item) => {
+            const fields = item.fields as ContentfulFields;
+            return {
+                title: fields.title || '',
+                slug: fields.slug || '',
+                content: convertRichTextToHtml(fields.content),
+                metaDescription: fields.metaDescription,
+                lastUpdated: item.sys.updatedAt,
+            };
+        });
+    } catch (error) {
+        console.error('Error fetching help pages:', error);
+        return [];
+    }
+}
+
+// Fetch a single help page by slug
+export async function getHelpPage(slug: string): Promise<IDocumentationPage | null> {
+    try {
+        const response = await client.getEntries({
+            content_type: 'helpPage',
+            'fields.slug': slug,
+            include: 10, // Include up to 10 levels of linked entries and assets
+        });
+
+        if (response.items.length === 0) {
+            return null;
+        }
+
+        const item = response.items[0];
+        const fields = item.fields as ContentfulFields;
+        
+        // Debug: Log the raw content to see what we're getting
+        console.log('Raw content from Contentful:', typeof fields.content);
+        if (typeof fields.content === 'object' && fields.content) {
+            console.log('Content structure:', JSON.stringify(fields.content, null, 2));
+        }
+        
+        // If the content is already HTML (string), we need to check if it contains the formatting
+        // If it's Rich Text object, we can process it
+        console.log('Content type:', typeof fields.content);
+        console.log('Content length:', fields.content ? (fields.content as string).length : 'null/undefined');
+        
+        // For now, always process as Rich Text object to test
+        console.log('Processing as Rich Text object...');
+        let processedContent = convertRichTextToHtml(fields.content);
+        console.log('After Rich Text conversion, length:', processedContent.length);
+        
+        // If the content is a string (HTML), process it to ensure code blocks preserve newlines
+        if (typeof processedContent === 'string') {
+            processedContent = processHtmlContent(processedContent);
+        }
+        
+        return {
+            title: fields.title || '',
+            slug: fields.slug || '',
+            content: processedContent,
+            metaDescription: fields.metaDescription,
+            lastUpdated: item.sys.updatedAt,
+        };
+    } catch (error) {
+        console.error('Error fetching help page:', error);
+        return null;
+    }
+}

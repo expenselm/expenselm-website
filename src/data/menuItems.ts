@@ -26,6 +26,32 @@ export const menuItems: IMenuItem[] = [
         ]
     },
     {
+        text: "Help",
+        url: "#",
+        dropdown: [
+            {
+                text: "View All Help",
+                url: "/help",
+                description: "Browse all help articles"
+            },
+            {
+                text: "Privacy",
+                url: "/help/privacy",
+                description: "Privacy Policy"
+            },
+            {
+                text: "Terms & Conditions",
+                url: "/help/terms-and-conditions",
+                description: "Terms and Conditions"
+            },
+            {
+                text: "FAQ",
+                url: "/help/faq",
+                description: "Frequently Asked Questions"
+            }
+        ]
+    },
+    {
         text: "Blog",
         url: "#testimonials"
     }
