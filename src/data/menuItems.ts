@@ -35,6 +35,11 @@ export const menuItems: IMenuItem[] = [
                 description: "Browse all help articles"
             },
             {
+                text: "Expense Analytics with AI",
+                url: "/help/expense-analytics-with-ai",
+                description: "Expense Analytics with ExpenseLM Agent or MCP"
+            },
+            {
                 text: "Privacy",
                 url: "/help/privacy",
                 description: "Privacy Policy"
