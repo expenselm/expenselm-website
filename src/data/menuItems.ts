@@ -53,6 +53,11 @@ export const menuItems: IMenuItem[] = [
                 text: "FAQ",
                 url: "/help/faq",
                 description: "Frequently Asked Questions"
+            },
+            {
+                text: "Account Deletion",
+                url: "/help/account-deletion",
+                description: "ExpenseLM Account Deletion"
             }
         ]
     },
