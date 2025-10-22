@@ -21,13 +21,14 @@ export const footerDetails: {
     email: 'enquiry@expenselm.ai',
     telephone: '+1 (123) 456-7890',
     socials: {
-        // github: 'https://github.com',
-        x: 'https://twitter.com/x',
+        github: 'https://github.com/expenselm',
+        x: 'https://x.com/ExpenseLm',
         // twitter: 'https://twitter.com/Twitter',
         // facebook: 'https://facebook.com',
         // youtube: 'https://youtube.com',
-        linkedin: 'https://www.linkedin.com',
+        linkedin: 'https://www.linkedin.com/in/hoclarence',
         // threads: 'https://www.threads.net',
         // instagram: 'https://www.instagram.com',
+        discord: 'https://discord.com/channels/1430401719510237197/1430401720403492896',
     }
 }
