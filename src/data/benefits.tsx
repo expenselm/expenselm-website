@@ -27,7 +27,7 @@ export const benefits: IBenefit[] = [
         ]
     },
     {
-        title: "Easy Expense Capturing with Item Level Details",
+        title: "Easy Expense Recording with Item Level Details",
         description: "Take photo or upload image of invoice/receipt. Our AI-powered tools will turn it into structured data.",
         bullets: [
             {
@@ -42,7 +42,7 @@ export const benefits: IBenefit[] = [
             },
             {
                 title: "Capture Detail Expense Information",
-                description: "Include shop name, address, category and type (subscription or standard using AI). Down to item level details. Support search for all information semantically with Vector Database.",
+                description: "Include shop name, address, category and type (subscription or standard, inferred from AI). Down to item level details. Support search for all information semantically with Vector Database.",
                 icon: <FcCurrencyExchange size={26} />
             }
         ]
@@ -63,7 +63,7 @@ export const benefits: IBenefit[] = [
             },
             {
                 title: "ExpenseLM MCP Server",
-                description: "Use your favorite AI Assistant to understand your expense, and get advice (e.g. Where is my money spent at? Any rudundant subscription? Can I buy things cheaper at somewhere else?) in the way you want.",
+                description: "Use your favorite AI Assistant to help understand your expense, and get advice (e.g. Where is my money spent at? Any redundant subscription? Can I buy things cheaper at somewhere else?) in the way you want.",
                 icon: <TbServerBolt size={26} />
             }
         ]
