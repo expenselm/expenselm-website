@@ -56,23 +56,23 @@ const BenefitSection: React.FC<Props> = ({ benefit }: Props) => {
                 whileInView="onscreen"
                 viewport={{ once: true }}
             >
-                <div className="mt-10 w-full text-center lg:text-left ">
+                <div className="mt-10 w-full lg:flex-1">
                     <motion.div
-                        className="flex flex-col w-full"
+                        className="flex flex-col w-full mx-auto lg:mx-0 text-center lg:text-left lg:max-w-none"
                         variants={childVariants}
                     >
                         <SectionTitle>
-                            <h3 className="lg:max-w-2xl">
+                            <h3 className="w-full lg:max-w-none">
                                 {title}
                             </h3>
                         </SectionTitle>
 
-                        <p className="mt-1.5 mx-auto lg:ml-0 leading-normal text-foreground-accent">
+                        <p className="mt-1.5 mx-auto lg:mx-0 leading-normal text-foreground-accent w-full lg:max-w-none">
                             {description}
                         </p>
                     </motion.div>
 
-                    <div className="mx-auto lg:ml-0 w-full">
+                    <div className="mx-auto lg:mx-0 w-full lg:max-w-none">
                         {bullets.map((item, index) => (
                             <BenefitBullet key={index} title={item.title} icon={item.icon} description={item.description} />
                         ))}
