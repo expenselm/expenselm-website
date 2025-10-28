@@ -5,8 +5,11 @@ interface SectionTitleProps {
 }
 
 const SectionTitle: React.FC<SectionTitleProps> = ({ children }) => {
+    const existingClassName = children.props.className ?? "";
+    const mergedClassName = `${existingClassName} text-3xl lg:text-5xl lg:leading-tight font-bold`.trim();
+
     return React.cloneElement(children, {
-        className: children.props.className + " text-3xl lg:text-5xl lg:leading-tight font-bold"
+        className: mergedClassName
     });
 };
 

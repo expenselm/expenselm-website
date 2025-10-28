@@ -8,7 +8,7 @@ export const faqs: IFAQ[] = [
     },
     {
         question: `How to signup for ${siteDetails.siteName}?`,
-        answer: 'Just visit https://web.expenselm.ai and signup with your email and password, or login with your Google account.'
+        answer: 'Just visit https://web.expenselm.ai and signup with your email and password, or login/signup with your Google account or Apple ID.'
     },
     {
         question: `How to setup ${siteDetails.siteName} MCP server for Claude and Perplexity Desktop?`,
