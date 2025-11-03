@@ -1,6 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
-
 import { heroDetails } from '@/data/hero';
 
 const Hero: React.FC = () => {
@@ -20,17 +18,19 @@ const Hero: React.FC = () => {
             <div className="text-center">
                 <h1 className="text-4xl md:text-6xl md:leading-tight font-bold text-foreground max-w-lg md:max-w-2xl mx-auto">{heroDetails.heading}</h1>
                 <p className="mt-4 text-foreground max-w-lg mx-auto">{heroDetails.subheading}</p>
-                <Image
-                    src={heroDetails.centerImageSrc}
-                    width={768}
-                    height={630}
-                    quality={100}
-                    sizes="(max-width: 768px) 100vw, 630px"
-                    priority={true}
-                    unoptimized={true}
-                    alt="app mockup"
-                    className='relative mt-12 md:mt-16 mx-auto z-10'
-                />
+                <div
+                    className="relative mt-12 md:mt-16 mx-auto w-full max-w-4xl overflow-hidden rounded-3xl border border-slate-200 bg-black shadow-2xl"
+                    style={{ aspectRatio: '16 / 9' }}
+                >
+                    <iframe
+                        src="https://www.youtube.com/embed/bTKEHkVSayI"
+                        title="ExpenseLM product tour"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        loading="lazy"
+                        className="h-full w-full"
+                    />
+                </div>
             </div>
         </section>
     );
