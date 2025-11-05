@@ -63,6 +63,18 @@ export const menuItems: IMenuItem[] = [
     },
     {
         text: "Blog",
-        url: "#testimonials"
+        url: "#",
+        dropdown: [
+            {
+                text: "View All Blog Posts",
+                url: "/blog",
+                description: "Browse all blog posts"
+            },
+            {
+                text: "Introducing ExpenseLM",
+                url: "/blog/introducing-expenselm",
+                description: "Introducing ExpenseLM"
+            }
+        ]
     }
 ];
