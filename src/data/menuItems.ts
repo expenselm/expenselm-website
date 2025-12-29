@@ -19,9 +19,9 @@ export const menuItems: IMenuItem[] = [
                 description: "Getting Started with ExpenseLM"
             },
             {
-                text: "MCP Server Guide",
+                text: "Local MCP Server Guide",
                 url: "/docs/mcp-server-guide",
-                description: "ExpenseLM MCP Server Guide"
+                description: "ExpenseLM Local MCP Server Guide"
             }
         ]
     },
