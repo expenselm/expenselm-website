@@ -22,6 +22,11 @@ export const menuItems: IMenuItem[] = [
                 text: "Local MCP Server Guide",
                 url: "/docs/mcp-server-guide",
                 description: "ExpenseLM Local MCP Server Guide"
+            },
+            {
+                text: "Remote MCP Server Guide",
+                url: "/docs/remote-mcp-server-guide",
+                description: "ExpenseLM Remote MCP Server Guide"
             }
         ]
     },
