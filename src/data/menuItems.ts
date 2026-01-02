@@ -79,6 +79,11 @@ export const menuItems: IMenuItem[] = [
                 text: "Introducing ExpenseLM",
                 url: "/blog/introducing-expenselm",
                 description: "Introducing ExpenseLM"
+            },
+            {
+                text: "ExpenseLM Remote MCP Server",
+                url: "/blog/introducing-expenselm-remote-mcp-server",
+                description: "Introducing ExpenseLM Remote MCP Server"
             }
         ]
     }
