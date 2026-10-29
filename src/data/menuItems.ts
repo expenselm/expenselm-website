@@ -42,7 +42,7 @@ export const menuItems: IMenuItem[] = [
             {
                 text: "Expense Analytics with AI",
                 url: "/help/expense-analytics-with-ai",
-                description: "Expense Analytics with ExpenseLM Agent or MCP"
+                description: "Expense Analytics with your AI assistant via MCP"
             },
             {
                 text: "Privacy",
