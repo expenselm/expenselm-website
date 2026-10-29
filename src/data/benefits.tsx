@@ -1,4 +1,4 @@
-import { TbApps, TbMessageChatbot, TbReceipt, TbReportMoney, TbRobot, TbStarsFilled, TbChartHistogram, TbServerBolt } from "react-icons/tb";
+import { TbApps, TbMessageChatbot, TbReceipt, TbReportMoney, TbStarsFilled, TbChartHistogram, TbServerBolt } from "react-icons/tb";
 import { LuLanguages } from "react-icons/lu";
 import { FcCurrencyExchange } from "react-icons/fc";
 
@@ -15,13 +15,8 @@ export const benefits: IBenefit[] = [
                 icon: <TbReportMoney size={26} />
             },
             {
-                title: "ExpenseLM Agent",
-                description: "An AI Agent that understands your expenses.",
-                icon: <TbRobot size={26} />
-            },
-            {
                 title: "ExpenseLM MCP Server",
-                description: "Integrates with your favorite LLM tool (e.g. Claude Desktop, Perplexity Desktop).",
+                description: "Integrates with your favorite AI assistant (e.g. Claude, ChatGPT, Perplexity) and any MCP-compatible agent.",
                 icon: <TbStarsFilled size={26} />
             }
         ]
@@ -37,7 +32,7 @@ export const benefits: IBenefit[] = [
             },
             {
                 title: "Multiple Languages and Currencies",
-                description: "Support all major languages (e.g. English, Chinese, Japanese and more) and currencies (USD,EUR,JPY,GBP,CNY,AUD,CAD,CHF,HKD,NZD,SGD,TWD).",
+                description: "Support all major languages (e.g. English, Chinese, Japanese and more) and currencies (USD, EUR, JPY, GBP, CNY, AUD, CAD, CHF, HKD, NZD, SGD, TWD, THB).",
                 icon: <LuLanguages size={26} />
             },
             {
@@ -55,11 +50,6 @@ export const benefits: IBenefit[] = [
                 title: "Statistics Reports",
                 description: "By date range, by category, by subscription (e.g. Netflix, YouTube, ChatGPT, etc.).",
                 icon: <TbChartHistogram size={26} />
-            },
-            {
-                title: "ExpenseLM Agent",
-                description: "Chat with your expense, perform currency conversion, and more.",
-                icon: <TbRobot size={26} />
             },
             {
                 title: "ExpenseLM MCP Server",
