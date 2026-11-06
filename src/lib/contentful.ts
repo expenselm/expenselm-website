@@ -266,6 +266,28 @@ const renderOptions: any = {
     },
 };
 
+// Render the children of a table cell. Contentful wraps cell text in paragraph
+// nodes, so recurse through paragraphs and join them with line breaks.
+function renderTableCellContent(cell: RichTextNode): string {
+    const renderInline = (nodes: RichTextNode[] = []): string =>
+        nodes
+            .map((n) => {
+                if (n.nodeType === 'text') return n.value ? renderTextWithMarks(n) : '';
+                if (n.nodeType === 'hyperlink') return renderHyperlink(n);
+                return renderInline(n.content);
+            })
+            .join('');
+
+    return (cell.content || [])
+        .map((child) => {
+            if (child.nodeType === 'paragraph') return renderInline(child.content);
+            if (child.nodeType === 'text' || child.nodeType === 'hyperlink') return renderInline([child]);
+            return renderInline(child.content);
+        })
+        .filter((html) => html !== '')
+        .join('<br />');
+}
+
 // Helper function to convert Rich Text to HTML with image support
 function convertRichTextToHtml(richText: unknown): string {
     if (!richText) return '';
@@ -447,28 +469,10 @@ function convertRichTextToHtml(richText: unknown): string {
                                     if (tableRow.content) {
                                         tableRow.content.forEach((cell: RichTextNode) => {
                                             if (cell.nodeType === 'table-header-cell' || cell.nodeType === BLOCKS.TABLE_HEADER_CELL) {
-                                                let cellContent = '';
-                                                if (cell.content) {
-                                                    cell.content.forEach((textNode: RichTextNode) => {
-                                                        if (textNode.nodeType === 'text' && textNode.value) {
-                                                            cellContent += renderTextWithMarks(textNode);
-                                                        } else if (textNode.nodeType === 'hyperlink') {
-                                                            cellContent += renderHyperlink(textNode);
-                                                        }
-                                                    });
-                                                }
+                                                const cellContent = renderTableCellContent(cell);
                                                 tableContent += `<th class="px-4 py-3 bg-gray-50 text-left text-sm font-semibold text-gray-900 border-r border-gray-300">${cellContent}</th>`;
                                             } else if (cell.nodeType === 'table-cell' || cell.nodeType === BLOCKS.TABLE_CELL) {
-                                                let cellContent = '';
-                                                if (cell.content) {
-                                                    cell.content.forEach((textNode: RichTextNode) => {
-                                                        if (textNode.nodeType === 'text' && textNode.value) {
-                                                            cellContent += renderTextWithMarks(textNode);
-                                                        } else if (textNode.nodeType === 'hyperlink') {
-                                                            cellContent += renderHyperlink(textNode);
-                                                        }
-                                                    });
-                                                }
+                                                const cellContent = renderTableCellContent(cell);
                                                 tableContent += `<td class="px-4 py-3 text-sm text-gray-700 border-r border-gray-300">${cellContent}</td>`;
                                             }
                                         });
