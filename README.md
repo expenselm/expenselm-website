@@ -60,9 +60,14 @@ Before starting, make sure you have the following installed:
 
 ---
 
-## Deploying on Vercel
+## Deploying on Firebase App Hosting
 
-The fastest way to deploy Finwise is on [Vercel](https://vercel.com/). Simply click the "Deploy with Vercel" button at the top of this README, or check the [Next.js deployment docs](https://vercel.com/docs/deployments/deployment-methods) for other deployment options.
+The site is hosted on Firebase App Hosting (project `underdoc-prd-649d`, backend `expenselm-website`). Pushes to `main` build and roll out automatically.
+
+- Runtime and env config: `apphosting.yaml`
+- Secrets: `firebase apphosting:secrets:set CONTENTFUL_SPACE_ID` and `CONTENTFUL_ACCESS_TOKEN`
+- Manual rollout: `firebase deploy --only apphosting`
+- Create the backend (one-time): `firebase apphosting:backends:create --project underdoc-prd-649d`
 
 ---
 
