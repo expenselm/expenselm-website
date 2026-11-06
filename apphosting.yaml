@@ -1,0 +1,20 @@
+# Firebase App Hosting config (project: underdoc-prd-649d)
+runConfig:
+  cpu: 1
+  memoryMiB: 512
+  minInstances: 0
+  maxInstances: 4
+
+env:
+  # Secrets (create with: firebase apphosting:secrets:set <NAME>)
+  - variable: CONTENTFUL_SPACE_ID
+    secret: CONTENTFUL_SPACE_ID
+  - variable: CONTENTFUL_ACCESS_TOKEN
+    secret: CONTENTFUL_ACCESS_TOKEN
+  # NEXT_PUBLIC_* values are inlined at build time
+  - variable: NEXT_PUBLIC_APP_STORE_URL
+    value: https://apps.apple.com/us/app/expenselm/id6753669319
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_GOOGLE_PLAY_URL
+    value: https://play.google.com/store/apps/details?id=ai.expenselm.app
+    availability: [BUILD, RUNTIME]
