@@ -32,7 +32,7 @@ export const benefits: IBenefit[] = [
             },
             {
                 title: "Multiple Languages and Currencies",
-                description: "Support all major languages (e.g. English, Chinese, Japanese and more) and currencies (USD, EUR, JPY, GBP, CNY, AUD, CAD, CHF, HKD, NZD, SGD, TWD, THB).",
+                description: "Support all major languages (e.g. English, Chinese, Japanese and more) and currencies (USD, EUR, JPY, GBP, CNY, AUD, CAD, CHF, HKD, NZD, SGD, TWD, THB, KRW).",
                 icon: <LuLanguages size={26} />
             },
             {
