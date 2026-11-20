@@ -19,14 +19,9 @@ export const menuItems: IMenuItem[] = [
                 description: "Getting Started with ExpenseLM"
             },
             {
-                text: "Local MCP Server Guide",
-                url: "/docs/mcp-server-guide",
-                description: "ExpenseLM Local MCP Server Guide"
-            },
-            {
-                text: "Remote MCP Server Guide",
-                url: "/docs/remote-mcp-server-guide",
-                description: "ExpenseLM Remote MCP Server Guide"
+                text: "MCP Server Guide",
+                url: "/connect",
+                description: "Connect ExpenseLM to your AI assistant"
             }
         ]
     },

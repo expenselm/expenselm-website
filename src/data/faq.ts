@@ -3,19 +3,27 @@ import { siteDetails } from "./siteDetails";
 
 export const faqs: IFAQ[] = [
     {
+        question: `Which AI assistants work with ${siteDetails.siteName}?`,
+        answer: 'Any assistant that can add a remote MCP server, including Claude, ChatGPT, Gemini, Muse, Hermes, OpenClaw and DeepSeek Harness. Step-by-step guides are at expenselm.ai/connect.',
+    },
+    {
+        question: `Do I need an AI assistant to use ${siteDetails.siteName}?`,
+        answer: 'No. You can capture receipts, browse and edit expenses, and see statistics in the web app and the iOS and Android apps. An assistant adds questions in plain language on top.',
+    },
+    {
         question: `Is ${siteDetails.siteName}'s free tier always free?`,
-        answer: 'Absolutely. The free tier is always free and will be available to all users.',
+        answer: 'Yes. The free tier is always free and includes 300 receipt extractions a month and unlimited expenses.',
     },
     {
-        question: `How to signup for ${siteDetails.siteName}?`,
-        answer: 'Just visit https://web.expenselm.ai and signup with your email and password, or login/signup with your Google account or Apple ID.'
+        question: `How do I sign up for ${siteDetails.siteName}?`,
+        answer: 'Visit web.expenselm.ai or download the iOS or Android app, and sign up with Google, Apple or an email and password.',
     },
     {
-        question: `How to setup ${siteDetails.siteName} MCP server for Claude and Perplexity Desktop?`,
-        answer: 'Just visit the documentation page. Detail instruction is there.'
+        question: 'Is my data private?',
+        answer: 'We never sell your data or use your receipts to train AI models. You choose which assistants can connect, and deleting your account deletes your expenses and receipts. See our privacy policy at expenselm.ai/help/privacy.',
     },
     {
         question: `What if I need help using ${siteDetails.siteName}?`,
-        answer: 'Feel free to contact us at support@expenselm.ai.'
-    }
+        answer: 'Email us at enquiry@expenselm.ai.',
+    },
 ];

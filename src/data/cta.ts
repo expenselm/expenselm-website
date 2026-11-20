@@ -1,6 +1,6 @@
 export const ctaDetails = {
-    heading: 'Track Every Expense Wherever You Are with the ExpenseLM Companion Mobile App',
-    subheading: 'Stay in control of your spending with the ExpenseLM mobile app. Capture receipts instantly and sync them across every device.',
+    heading: 'Capture receipts on the go with the ExpenseLM app',
+    subheading: 'Take a photo, check what was read, and save. Your expenses sync to the web app and to every assistant you connect.',
     appStoreUrl: process.env.NEXT_PUBLIC_APP_STORE_URL ?? '#',
     googlePlayUrl: process.env.NEXT_PUBLIC_GOOGLE_PLAY_URL ?? '#',
 }

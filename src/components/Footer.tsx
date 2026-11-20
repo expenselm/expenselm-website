@@ -14,8 +14,8 @@ const Footer: React.FC = () => {
                     <Link href="/" className="flex items-center gap-2">
                         <Image
                             src={siteDetails.siteLogo}
-                            width={50}
-                            height={50}
+                            width={44}
+                            height={45}
                             alt={siteDetails.siteName}
                         />
                         <h3 className="manrope text-xl font-semibold cursor-pointer">
