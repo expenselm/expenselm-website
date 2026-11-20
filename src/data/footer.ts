@@ -4,10 +4,9 @@ export const footerDetails: {
     subheading: string;
     quickLinks: IMenuItem[];
     email: string;
-    telephone: string;
     socials: ISocials;
 } = {
-    subheading: "Empowering businesses with cutting-edge financial technology solutions.",
+    subheading: "Expense capture for your AI assistant.",
     quickLinks: [
         {
             text: "Features",
@@ -16,10 +15,21 @@ export const footerDetails: {
         {
             text: "Pricing",
             url: "#pricing"
+        },
+        {
+            text: "Connect your assistant",
+            url: "/connect"
+        },
+        {
+            text: "Privacy",
+            url: "/help/privacy"
+        },
+        {
+            text: "Terms & Conditions",
+            url: "/help/terms-and-conditions"
         }
     ],
     email: 'enquiry@expenselm.ai',
-    telephone: '+1 (123) 456-7890',
     socials: {
         github: 'https://github.com/expenselm',
         x: 'https://x.com/ExpenseLm',

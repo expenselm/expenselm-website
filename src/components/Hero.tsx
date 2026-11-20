@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { heroDetails } from '@/data/hero';
 
 const Hero: React.FC = () => {
@@ -17,7 +18,15 @@ const Hero: React.FC = () => {
 
             <div className="text-center">
                 <h1 className="text-4xl md:text-6xl md:leading-tight font-bold text-foreground max-w-lg md:max-w-2xl mx-auto">{heroDetails.heading}</h1>
-                <p className="mt-4 text-foreground max-w-lg mx-auto">{heroDetails.subheading}</p>
+                <p className="mt-4 text-foreground max-w-xl mx-auto">{heroDetails.subheading}</p>
+                <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <Link href={heroDetails.primaryCta.url} className="text-black bg-primary hover:bg-primary-accent px-8 py-3 rounded-full font-semibold transition-colors">
+                        {heroDetails.primaryCta.text}
+                    </Link>
+                    <Link href={heroDetails.secondaryCta.url} target="_blank" className="text-foreground bg-white border border-gray-300 hover:bg-gray-50 px-8 py-3 rounded-full font-semibold transition-colors">
+                        {heroDetails.secondaryCta.text}
+                    </Link>
+                </div>
                 <div
                     className="relative mt-12 md:mt-16 mx-auto w-full max-w-4xl overflow-hidden rounded-3xl border border-slate-200 bg-black shadow-2xl"
                     style={{ aspectRatio: '16 / 9' }}
