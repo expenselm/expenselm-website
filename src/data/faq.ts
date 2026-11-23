@@ -4,7 +4,7 @@ import { siteDetails } from "./siteDetails";
 export const faqs: IFAQ[] = [
     {
         question: `Which AI assistants work with ${siteDetails.siteName}?`,
-        answer: 'Any assistant that can add a remote MCP server, including Claude, ChatGPT, Gemini, Muse, Hermes, OpenClaw and DeepSeek Harness. Step-by-step guides are at expenselm.ai/connect.',
+        answer: 'Any assistant that can add a remote MCP server, including Claude, ChatGPT, Gemini, Grok, Muse, Hermes, OpenClaw and DeepSeek Harness. Step-by-step guides are at expenselm.ai/connect.',
     },
     {
         question: `Do I need an AI assistant to use ${siteDetails.siteName}?`,

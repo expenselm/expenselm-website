@@ -98,6 +98,28 @@ export const connectGuides: IConnectGuide[] = [
         lastChecked: '2026-11-20',
     },
     {
+        slug: 'grok',
+        name: 'Grok',
+        summary: 'Grok on grok.com, as a custom connector. Also Grok Build.',
+        signIn: 'oauth',
+        requirements: [
+            'A Grok account. xAI says connectors are available to all Grok users.',
+            'On Grok Business or Enterprise, a team admin adds the connector in the xAI console first; then each member connects with their own ExpenseLM account.',
+        ],
+        steps: [
+            { text: 'Go to **grok.com/connectors** (or **Connectors** in Grok\'s settings).' },
+            { text: 'Select **New Connector**, then **Custom**.' },
+            { text: 'Enter the name `ExpenseLM` and the server address below, then select **Add Connector**.', code: MCP_SERVER_URL },
+            { text: 'Sign in with your ExpenseLM account when asked, and approve access.' },
+            { text: 'Ask about your spending. Grok uses ExpenseLM\'s tools when your question is about your expenses, so mentioning ExpenseLM helps.' },
+        ],
+        notes: [
+            '**Grok Build** (the command line): `grok mcp add --transport http expenselm https://mcp.expenselm.ai/mcp`, then sign in when it opens your browser.',
+        ],
+        help: { label: 'xAI: Grok connectors', url: 'https://docs.x.ai/grok/connectors' },
+        lastChecked: '2026-11-23',
+    },
+    {
         slug: 'muse',
         name: 'Muse',
         summary: 'Meta\'s Muse assistant, as a custom connector.',

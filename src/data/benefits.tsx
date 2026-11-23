@@ -30,7 +30,7 @@ export const benefits: IBenefit[] = [
         bullets: [
             {
                 title: "Works with the assistant you use",
-                description: "Claude, ChatGPT, Gemini, Muse, Hermes, OpenClaw, DeepSeek Harness and any app that supports MCP. Set-up takes a minute.",
+                description: "Claude, ChatGPT, Gemini, Grok, Muse, Hermes, OpenClaw, DeepSeek Harness and any app that supports MCP. Set-up takes a minute.",
                 icon: <TbPlugConnected size={26} />
             },
             {
