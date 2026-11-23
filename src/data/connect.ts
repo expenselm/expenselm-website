@@ -103,7 +103,7 @@ export const connectGuides: IConnectGuide[] = [
         summary: 'Grok on grok.com, as a custom connector. Also Grok Build.',
         signIn: 'oauth',
         requirements: [
-            'A Grok account. xAI says connectors are available to all Grok users.',
+            'A Grok account. Custom connectors work on the free plan too (we tested it on 23 November 2026).',
             'On Grok Business or Enterprise, a team admin adds the connector in the xAI console first; then each member connects with their own ExpenseLM account.',
         ],
         steps: [
