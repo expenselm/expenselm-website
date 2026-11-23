@@ -8,7 +8,7 @@ import { WEB_APP_URL, connectGuides } from '@/data/connect';
 
 export const metadata = {
     title: 'Connect ExpenseLM to your AI assistant',
-    description: 'Add ExpenseLM to Claude, ChatGPT, Gemini, Muse, Hermes, OpenClaw, DeepSeek Harness or any MCP app, then ask about your spending.',
+    description: 'Add ExpenseLM to Claude, ChatGPT, Gemini, Grok, Muse, Hermes, OpenClaw, DeepSeek Harness or any MCP app, then ask about your spending.',
 };
 
 export default function ConnectIndexPage() {
