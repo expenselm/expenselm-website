@@ -63,7 +63,7 @@ export const connectGuides: IConnectGuide[] = [
         requirements: [
             'ChatGPT on the web. Custom MCP servers aren\'t available on the Free plan.',
             'On Business, Enterprise and Edu plans, a workspace admin turns on developer mode and adds the app for the workspace.',
-            'Plus and Pro plans can add custom servers in developer mode, but OpenAI may limit them to reading. Check OpenAI\'s help page for your plan.',
+            'Works on the Plus plan with developer mode on (we tested it on 25 November 2026), and on Pro.',
         ],
         steps: [
             { text: 'On chatgpt.com, open **Settings → Apps → Advanced settings** and turn on **Developer mode**.' },
@@ -77,7 +77,7 @@ export const connectGuides: IConnectGuide[] = [
             '**Dots** (always-on personal agents, on some plans) use the apps already installed on your account, so they can use ExpenseLM once it\'s added.',
         ],
         help: { label: 'OpenAI: developer mode and MCP apps', url: 'https://help.openai.com/en/articles/12584461' },
-        lastChecked: '2026-11-20',
+        lastChecked: '2026-11-25',
     },
     {
         slug: 'gemini',
