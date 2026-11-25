@@ -63,7 +63,7 @@ export const connectGuides: IConnectGuide[] = [
         requirements: [
             'ChatGPT on the web. Custom MCP servers aren\'t available on the Free plan.',
             'On Business, Enterprise and Edu plans, a workspace admin turns on developer mode and adds the app for the workspace.',
-            'Works on the Plus plan with developer mode on (we tested it on 25 November 2026), and on Pro.',
+            'Works on the Plus plan with developer mode on (we tested it on 25 November 2026).',
         ],
         steps: [
             { text: 'On chatgpt.com, open **Settings → Apps → Advanced settings** and turn on **Developer mode**.' },
